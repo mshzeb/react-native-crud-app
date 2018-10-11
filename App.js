@@ -81,7 +81,6 @@ class MainActivity extends Component {
           />
           <TextInput 
               keyboardType={'numeric'}
-              value="abc"
               placeholder="Enter Student Phone Number"
               onChangeText={ TextInputValue => this.setState({ TextInput_Student_PhoneNumber : TextInputValue }) }
               underlineColorAndroid='transparent'
