@@ -113,7 +113,7 @@ class ShowStudentListActivity extends Component {
           console.error(error);
         });
   }
-  GetStudentIDFunction = (student_id, student_name, student_class, student_class, student_phone_number, student_email)=>{
+  GetStudentIDFunction = (student_id, student_name, student_class, student_phone_number, student_email)=>{
     this.props.navigation.navigate('Third', {
       ID : student_id,
       NAME : student_name,
