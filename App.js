@@ -19,11 +19,28 @@ class MainActivity extends Component {
     }
   }
 
+  CheckTextInputIsEmptyOrNot = () =>{
+
+    const { TextInput_Student_Name } = this.state;
+    const { TextInput_Student_Class } = this.state;
+    const { TextInput_Student_PhoneNumber } = this.state;
+    const { TextInput_Student_Email } = this.state;
+
+    if ( TextInput_Student_Name == '' || TextInput_Student_Class == '' || TextInput_Student_PhoneNumber == '' || TextInput_Student_Email == '')
+    {
+      Alert.alert("Please Enter something in Text Fields.");
+    }
+    else{
+      // Do something here which you want to if all the text input is filled.
+      this.InsertStudentRecordsToServer();
+    }
+
+  }
+
   InsertStudentRecordsToServer = () =>{
-    fetch('https://bizlogic.byethost8.com/Student/InsertStudentData.php', {
+    fetch('http://bizlogic.byethost8.com/Student/InsertStudentData.php', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
       },
       body: JSON.stringify({
         student_name : this.state.TextInput_Student_Name,
@@ -31,13 +48,14 @@ class MainActivity extends Component {
         student_phone_number : this.state.TextInput_Student_PhoneNumber,
         student_email : this.state.TextInput_Student_Email
       })
-    }).then((response) => response.json())
-        .then((responseJson) => {
+    }).then((response) => response.text()) //.then((response) => response.json())
+        .then((text) => console.log(text)) //.then((responseJson) => {
           // Showing response message coming from server after inserting records.
-          Alert.alert(responseJson);
-        }).catch((error) => {
-            console.error(error);
-        });
+          //Alert.alert(responseJson);
+        //}).catch((error) => {
+            //console.error(error);
+          //  console.log(error);
+        //});
   }
 
   GoTo_Show_StudentListActivity_Function = () =>
@@ -62,18 +80,21 @@ class MainActivity extends Component {
               style={styles.TextInputStyleClass}
           />
           <TextInput 
+              keyboardType={'numeric'}
               placeholder="Enter Student Phone Number"
               onChangeText={ TextInputValue => this.setState({ TextInput_Student_PhoneNumber : TextInputValue }) }
               underlineColorAndroid='transparent'
               style={styles.TextInputStyleClass}
           />
           <TextInput 
+              keyboardType={'email-address'}
+              autoCapitalize='none'
               placeholder="Enter Student Email"
               onChangeText={ TextInputValue => this.setState({ TextInput_Student_Email : TextInputValue }) }
               underlineColorAndroid='transparent'
               style={styles.TextInputStyleClass}
           />
-          <TouchableOpacity activeOpacity = { 0.4 } style={styles.TouchableOpacityStyle} onPress={this.InsertStudentRecordsToServer} >
+          <TouchableOpacity activeOpacity = { 0.4 } style={styles.TouchableOpacityStyle} onPress={this.CheckTextInputIsEmptyOrNot} >
             <Text style={styles.TextStyle}> INSERT STUDENT RECORD TO SERVER </Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { 0.4 } style={styles.TouchableOpacityStyle} onPress={this.GoTo_Show_StudentListActivity_Function} >
@@ -98,9 +119,10 @@ class ShowStudentListActivity extends Component {
   };
 
   componentDidMount() {
-    return fetch('https//bizlogic.byethost8.com/Student/ShowAllStudentList.php')
+    return fetch('http://bizlogic.byethost8.com/Student/ShowAllStudentsList.php')
         .then((response) => response.json())
         .then((responseJson) => {
+          console.log(JSON.stringify(response, null, 4))
           let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             isLoading: false,
@@ -194,11 +216,9 @@ class EditStudentRecordActivity extends Component {
   };
 
   UpdateStudentRecord = () =>{
-    fetch('https://bizlogic.byethost8.com/Student/UpdateStudentRecord.php', {
+    fetch('http://bizlogic.byethost8.com/Student/UpdateStudentRecord.php', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         student_id : this.state.TextInput_Student_ID,
@@ -213,16 +233,16 @@ class EditStudentRecordActivity extends Component {
           //Showing response message coming from server updating records.
           Alert.alert(responseJson);
         }).catch((error) => {
-          console.error(error);
+          //console.error(error);
+          console.log(error);
         });
   }
 
   DeleteStudentRecord = () =>{
-    fetch('https://bizlogic.byethost8.com/Student/DeleteStudentRecord.php', {
+    fetch('http://bizlogic.byethost8.com/Student/DeleteStudentRecord.php', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        
       },
       body: JSON.stringify({
         student_id : this.state.TextInput_Student_ID
